@@ -3,7 +3,13 @@ kind: Deployment
 metadata:
   name: myapp
 spec:
-  replicas: 2
+  replicas: 10
+  # Update pods with rolling update
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -12,20 +18,29 @@ spec:
       containers:
       - name: myapp
         image: trace.risingstack.com/myapp:v1
-        # Tells to LoadBalancer that ready for traffic
-        # Checks every 5 seconds, after 5 second initial wait
-        # Fails after 2 probes => failureThreshold * periodSeconds = 10s
+        # ReadinessProbe: indicates whether the container is ready to service requests.
+        # If the ReadinessProbe fails, the endpoints controller will remove the
+        # pod’s IP address from the endpoints of all services that match the pod.
+        # The default state of Readiness before the initial delay is Failure.
+        #
+        # Checks every w seconds, after 2 second initial wait
+        # Fails after 2 probes => failureThreshold * periodSeconds = 4s
+        # It means that after 4s the Service doesn't send more traffic to the pod
         readinessProbe:
           failureThreshold: 2
           httpGet:
             path: /health
             port: 3000
             scheme: HTTP
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          initialDelaySeconds: 2
+          periodSeconds: 2
           successThreshold: 1
           timeoutSeconds: 1
-        # Restarts pod when it fails
+        # LivenessProbe: indicates whether the container is live, i.e. running.
+        # If the LivenessProbe fails, the kubelet will kill the container and
+        # the container will be subjected to its RestartPolicy.
+        # The default state of Liveness before the initial delay is Success
+        #
         # Checks every 10 seconds, after 5 second initial wait
         # Fails after 3 probes => failureThreshold * periodSeconds = 30s
         # Timeout is 1s (1000ms), that's why we use promise timeout with 900ms
