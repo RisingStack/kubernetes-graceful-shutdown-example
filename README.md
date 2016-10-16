@@ -1,3 +1,3 @@
-# graceful-shutdown
+# kubernetes-graceful-stop-example
 
 // TODO
