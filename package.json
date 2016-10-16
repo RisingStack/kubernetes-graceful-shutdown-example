@@ -8,6 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "RisingStack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RisingStack/kubernetes-graceful-stop-example.git"
+  },
   "license": "ISC",
   "dependencies": {
     "es6-promisify": "5.0.0",
