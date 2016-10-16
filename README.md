@@ -68,7 +68,7 @@ Successful graceful shutdown 2016-10-16T18:55:05.212Z
 
 **Success!**
 
-Zero failed requests: you can see in the app log that Service stopped sending traffic to the pod.
+Zero failed requests: you can see in the app log that Service stopped sending traffic to the pod before we disconnected from db and killed the app.
 
 ## Known issues
 
