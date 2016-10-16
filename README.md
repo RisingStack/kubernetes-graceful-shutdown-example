@@ -1,20 +1,20 @@
 # kubernetes-graceful-stop-example
 
-Example repository to give a help with Kubernetes graceful start and shutdown.
+Example repository to give a help with Kubernetes graceful start and shutdown in Node.js
 
 ## What it does?
 
 1. pod receives *SIGTERM* signal because Kubernetes wants to stop the it because of deploy, scale etc.
 2. App *(pod)* starts to return `500` for `GET /health` to let `readinessProbe` *(Service)* know that it's not ready to receive more requests.
-3. Kubernetes `readinessProbe` checks `GET /health` and after *(failureThreshold * periodSecond)* it stops redirecting traffic after it *(because it continuously returns 500)*
-4. App waits *(failureThreshold * periodSecond)* before starts shutdown, to wait for `readinessProbe` fail
+3. Kubernetes `readinessProbe` checks `GET /health` and after *(failureThreshold * periodSecond)* it stops redirecting traffic after to the app *(because it continuously returns 500)*
+4. App waits *(failureThreshold * periodSecond)* before starts shutdown, to being sure that Service is get notified via `readinessProbe` fail
 5. App starts graceful shutdown
 6. App first close server with live working DB connections
-7. App close databases after the server is closed
+7. App closes databases after the server is closed
 8. App exists process
-9. Kubernetes force kill application after 30s *(SIGKILL)* if it's still running (in an optimal case it doesn't happen)
+9. Kubernetes force kill application after 30s *(SIGKILL)* if it's still running *(in an optimal case it doesn't happen)*
 
-In our case Kubernetes `livenessProbe` won't kill the app before graceful shutdown because needs to wait *(failureThreshold * periodSecond)* to do it, so `livenessProve` threshold should be larger than `readinessProbe` threshold *(graceful stop happens around 10s, force kill would happen 30s after SIGTERM)*
+In our case Kubernetes `livenessProbe` won't kill the app before graceful shutdown because needs to wait *(failureThreshold * periodSecond)* to do it, so `livenessProve` threshold should be larger than `readinessProbe` threshold *(graceful stop happens around 4s, force kill would happen 30s after SIGTERM)*
 
 ## Benchmark
 
@@ -63,6 +63,12 @@ HEALTH: NOT OK
 Server is shutting down... 2016-10-16T18:55:05.210Z
 Successful graceful shutdown 2016-10-16T18:55:05.212Z
 ```
+
+### Benchmark result
+
+**Success!**
+
+Zero failed requests: you can see in the app log that Service stopped sending traffic to the pod.
 
 ## Known issues
 
