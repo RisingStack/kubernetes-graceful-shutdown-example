@@ -1,5 +1,5 @@
 {
-  "name": "graceful-shutdown",
+  "name": "kubernetes-graceful-shutdown-example",
   "version": "1.0.0",
   "description": "Demonstrate graceful start and stop with Kubernetes",
   "main": "src/index.js",
@@ -10,7 +10,7 @@
   "author": "RisingStack",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RisingStack/kubernetes-graceful-stop-example.git"
+    "url": "git+https://github.com/RisingStack/kubernetes-graceful-shutdown-example.git"
   },
   "license": "ISC",
   "dependencies": {

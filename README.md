@@ -1,4 +1,4 @@
-# kubernetes-graceful-stop-example
+# kubernetes-graceful-shutdown-example
 
 Example repository to give a help with Kubernetes graceful start and shutdown in Node.js
 
