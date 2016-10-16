@@ -77,3 +77,11 @@ Zero failed requests: you can see in the app log that Service stopped sending tr
 Kubernetes doesn't handover keep-alive connections.
 Request from agents with keep-alive header will be still routed to the pod.
 It's tricked me first when I benchmarked with [autocannon](https://github.com/mcollina/autocannon) or `Google Chrome`.
+
+### Docker signaling
+
+`CMD ["node", "src"]` works, `CMD ["npm", "start"]` not.
+It doesn't pass the `SIGTERM` to the node process.
+
+An alternative can be:
+https://github.com/Yelp/dumb-init
