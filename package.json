@@ -1,0 +1,15 @@
+{
+  "name": "graceful-shutdown",
+  "version": "1.0.0",
+  "description": "Demonstrate graceful start and stop with Kubernetes",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "RisingStack",
+  "license": "ISC",
+  "dependencies": {
+    "es6-promisify": "5.0.0"
+  }
+}

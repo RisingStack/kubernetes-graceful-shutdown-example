@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: trace.risingstack.com/myapp:v1
+        # Tells to LoadBalancer that ready for traffic
+        # Checks every 5 seconds, after 5 second initial wait
+        # Fails after 2 probes => failureThreshold * periodSeconds = 10s
+        readinessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        # Restarts pod when it fails
+        # Checks every 10 seconds, after 5 second initial wait
+        # Fails after 3 probes => failureThreshold * periodSeconds = 30s
+        # Timeout is 1s (1000ms), that's why we use promise timeout with 900ms
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        # Pod (app instance) listens on this port
+        ports:
+        - containerPort: 3000
