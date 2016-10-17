@@ -4,6 +4,8 @@ Example repository to give a help with Kubernetes graceful start and shutdown in
 
 ## What it does?
 
+![Kubernetes graceful shutdown](https://cloud.githubusercontent.com/assets/1764512/19427956/7593df80-9447-11e6-9658-e593843a0f76.png)
+
 1. pod receives *SIGTERM* signal because Kubernetes wants to stop the it because of deploy, scale etc.
 2. App *(pod)* starts to return `500` for `GET /health` to let `readinessProbe` *(Service)* know that it's not ready to receive more requests.
 3. Kubernetes `readinessProbe` checks `GET /health` and after *(failureThreshold * periodSecond)* it stops redirecting traffic after to the app *(because it continuously returns 500)*
