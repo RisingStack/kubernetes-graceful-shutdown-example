@@ -26,6 +26,7 @@ db.connect()                                      // open DB connection first
   })
   .catch((err) => {
     console.error(err)
+    process.exit(1)
   })
 
 // Graceful stop
