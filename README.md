@@ -1,6 +1,7 @@
 # kubernetes-graceful-shutdown-example
 
-Example repository to give a help with Kubernetes graceful start and shutdown in Node.js
+Example repository to give a help with Kubernetes graceful start and shutdown in Node.js  
+Related article: https://blog.risingstack.com/graceful-shutdown-node-js-kubernetes/
 
 ## What it does?
 
