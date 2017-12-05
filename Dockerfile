@@ -1,4 +1,4 @@
-FROM risingstack/alpine:3.4-v4.6.0-4.0.0
+FROM risingstack/alpine:3.4-v8.5.0-4.7.0
 
 ENV PORT 3000
 EXPOSE 3000

@@ -1,8 +1,7 @@
 'use strict'
 
-const http = require('http')
 const promisify = require('es6-promisify')
-const enableDestroy = require('server-destroy')
+const stoppable = require('stoppable')
 const db = require('./db')
 const server = require('./server')
 const port = process.env.PORT || 3000
@@ -13,12 +12,12 @@ const READINESS_PROBE_DELAY = 2 * 2 * 1000     		// failureThreshold: 2, periodS
 // Destory extension helps to force close connections
 // Because we wait READINESS_PROBE_DELAY, we expect that all requests are fulfilled
 // https://en.wikipedia.org/wiki/HTTP_persistent_connection
-enableDestroy(server)
+stoppable(server)
 
 const serverListen = promisify(server.listen, server)
 const serverDestroy = promisify(server.destroy, server)
 
-// craceful start
+// graceful start
 db.connect()                                      // open DB connection first
   .then(() => serverListen(port))                 // listen after succss db connection
   .then(() => {
@@ -30,7 +29,7 @@ db.connect()                                      // open DB connection first
   })
 
 // Graceful stop
-function greacefulStop () {
+function gracefulStop () {
   console.info('Server is shutting down...', new Date().toISOString())
 
   serverDestroy()   										          // close server first (ongoing requests)
@@ -53,5 +52,5 @@ process.on('SIGTERM', function onSigterm () {
   // Wait a little bit to give enough time for Kubernetes readiness probe to fail (we don't want more traffic)
   // Don't worry livenessProbe won't kill it until (failureThreshold: 3) => 30s
   // http://www.bite-code.com/2015/07/27/implementing-graceful-shutdown-for-docker-containers-in-go-part-2/
-  setTimeout(greacefulStop, READINESS_PROBE_DELAY + DEBUG_DELAY)
+  setTimeout(gracefulStop, READINESS_PROBE_DELAY + DEBUG_DELAY)
 })
